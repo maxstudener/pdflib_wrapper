@@ -1,12 +1,19 @@
+$:.push File.expand_path('../lib', __FILE__)
+require 'pdflib_wrapper/version'
+
 Gem::Specification.new do |s|
-  s.name        = 'pdflib_wrapper'
-  s.version     = '0.0.0'
-  s.date        = '2013-06-14'
-  s.summary     = "Pdflib Wrapper Library"
-  s.description = "A simple wrapper for more ruby like syntax for pdflib"
-  s.authors     = ["Maxmillian Studener"]
-  s.email       = 'maxmillian.studener@gmail.com'
-  s.files       = ["lib/pdflib_wrapper.rb"]
-  s.homepage    =
-    'http://rubygems.org/gems/pdflib_wrapper'
+  s.name          = 'pdflib_wrapper'
+  s.version       = PdflibWrapper::VERSION
+  s.authors       = ['Maxmillian Studener']
+  s.email         = 'maxmillian.studener@gmail.com'
+  s.homepage      = 'https://github.com/maxstudener/pdflib_wrapper'
+  s.summary       = 'Pdflib Wrapper Library'
+  s.description   = 'A simple wrapper for more ruby like syntax for pdflib'
+
+  s.rubyforge_project = 'pdflib_wrapper'
+
+  s.files         = `git ls-files`.split('\n')
+  s.require_paths = ['lib']
+
+  s.add_development_dependency 'rspec'
 end
