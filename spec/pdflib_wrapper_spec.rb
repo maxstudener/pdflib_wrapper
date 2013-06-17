@@ -50,4 +50,32 @@ describe PdflibWrapper do
   	font.should equal(pdf.pdf.load_font("Helvetica", "winansi", "" ))
   	pdf.close
   end
+
+  it "gets width of external pdf" do
+  	width = 2.0
+  	external_tempfile = Tempfile.new("external.pdf")
+  	external_pdf = PdflibWrapper::Pdf.new(external_tempfile.path)
+  	external_pdf.new_page(width,4).save
+  	external_pdf.save
+
+
+  	test_pdf = PdflibWrapper::Pdf.new(Tempfile.new("test.pdf").path, {}, {with_blank_page: true})
+  	document = test_pdf.open_pdf(external_tempfile.path)
+  	page = test_pdf.open_pdf_page(1)
+  	page.width.should be(width)
+  end
+
+  it "get height of external pdf" do
+  	height = 4.0
+  	external_tempfile = Tempfile.new("external.pdf")
+  	external_pdf = PdflibWrapper::Pdf.new(external_tempfile.path)
+  	external_pdf.new_page(2, height).save
+  	external_pdf.save
+
+
+  	test_pdf = PdflibWrapper::Pdf.new(Tempfile.new("test.pdf").path, {}, {with_blank_page: true})
+  	document = test_pdf.open_pdf(external_tempfile.path)
+  	page = test_pdf.open_pdf_page(1)
+  	page.height.should be(height)
+  end
 end

@@ -4,7 +4,7 @@ module PdflibWrapper
 		def initialize(pdf, width, height, opts={})
 			#TODO: support opts
 			@pdf = pdf
-			@page = @pdf.begin_page_ext(width, height + 20, "")
+			@page = @pdf.begin_page_ext(width, height, "")
 		end
 
 		def save(opts={})
