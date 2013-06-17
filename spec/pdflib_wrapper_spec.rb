@@ -10,8 +10,7 @@ describe PdflibWrapper do
   							title: 		'This is a test pdf',
   							creator: 	'This Test',
   							keywords: ['Array', 'of', 'keywords'],
-  							trapped: 	false,
-  							compress: 9}
+  							trapped: 	false}
   	opts = {with_blank_page: true}
 
   	PdflibWrapper::Pdf.new(filepath, metadata, opts).save

@@ -38,6 +38,29 @@ module PdflibWrapper
 	  	#@pdf.get_pdi_value("/Root/Pages/Count", pdf_handle, -1, 0).to_i
 	  end
 
+
+	  #TODO: pull font and printing text into new class
+	  def set_text(font, size)
+	  	@pdf.setfont(font, size)
+	  end
+
+	  def set_text_position(width, height)
+	  	@pdf.set_text_pos(width, height)
+	  end
+
+	  def set_text_and_position(font,size,width,height)
+	  	set_text(font,size)
+	  	set_text_position(width, height)
+	  end
+
+	  def print(text)
+	  	@pdf.show(text)
+	  end
+
+	  def print_on_newline(text)
+	  	@pdf.continue_text(text)
+	  end
+
 	  def create_font(font, encoding, opts={})
 	  	#TODO: support opts
 	  	#  ascender, autocidfont, autosubsetting, capheight, descender, dropcorewidths, embedding, encoding, fallbackfonts, fontname, initialsubset, keepfont, keepnative, linegap, metadata, optimizeinvisible, readfeatures, readkerning, readselectors, readshaping, replacementchar, skipembedding, skipposttable, subsetlimit, subsetminsize, subsetting, unicodemap, vertical, xheight
