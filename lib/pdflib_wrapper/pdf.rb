@@ -24,7 +24,7 @@ module PdflibWrapper
 
 	    #TODO: support more of the Global Options of pdflib
 	    @pdf.set_parameter("licensefile", opts[:license_path] ) if opts[:license_path]
-	    @pdf.set_parameter("compress", opts[:compress] ) if opts[:compress] && opt
+	    @pdf.set_value("compress", opts[:compress] ) if opts[:compress] && opts[:compress].is_a?(Fixnum)
 
 	    @current_page = Page.new(@pdf, 1, 1).save if opts[:with_blank_page]
 	  end
