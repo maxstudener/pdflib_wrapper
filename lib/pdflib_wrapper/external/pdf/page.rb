@@ -11,12 +11,12 @@ module PdflibWrapper
 				end
 
 				def width(page=0)
-		      @pdf.get_pdi_value("width",  @document, @page, page )
+		      @pdf.get_pdi_value("width",  @document.document, @page, page )
 		      #width = @pdf.pcos_get_number(descriptor_pdf, "pages[0]/width")
 				end
 
 				def height(page=0)
-					@pdf.get_pdi_value("height", descriptor_pdf, descriptor_page, page )
+					@pdf.get_pdi_value("height", @document.document, @page, page )
 		      #height = @pdf.pcos_get_number(descriptor_pdf, "pages[0]/height")
 				end
 

@@ -1,5 +1,6 @@
 module PdflibWrapper
 	class Page
+		attr_accessor :page
 		def initialize(pdf, width, height, opts={})
 			#TODO: support opts
 			@pdf = pdf
