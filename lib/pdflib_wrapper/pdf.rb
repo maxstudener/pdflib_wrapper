@@ -13,7 +13,7 @@ module PdflibWrapper
 	  	begin_doc_opts = ""
 	  	begin_doc_opts << "masterpassword=#{opts[:master_password]} " if opts[:master_password]
 	  	begin_doc_opts << "permissions={#{opts[:permissions].join(' ')}} " if opts[:permissions] && opts[:permissions].is_a?(Array)
-	  	@pdf.begin_document(filepath, begin_doc_opts)
+	  	@pdf.begin_document(filepath.to_s, begin_doc_opts)
 
 			@pdf.set_info("Subject", metadata[:subject]) if metadata[:subject]
 			@pdf.set_info("Title", metadata[:title]) if metadata[:title]
