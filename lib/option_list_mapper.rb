@@ -11,13 +11,13 @@ class OptionListMapper
 			OptionListMapper.map_to_string(@modified_options, key, options[key])
 			@modified_options << ' '
 		end
-		@modified_options << singles.map{|key| options[key]}.flatten.join(' ')
+		@modified_options << singles.map{|key| OptionListMapper.map_single(key, options[key])}.join(' ')
 	end
 
 	class << self
 
 		def create_options(options_list="",kvs=[],singles=[],opts={})
-			new(options_list,kvs,singles,opts).modified_options
+			new(options_list,kvs,singles,opts).modified_options.strip
 		end
 		
 		def map_to_string(string, key, value, display_brackets=true, display_key=true)
@@ -43,6 +43,11 @@ class OptionListMapper
 				string << '}' if display_brackets
 			end
 			string
+		end
+
+		def map_single(key, value)
+			return '' if value.nil?
+			"#{key} #{value}"
 		end
 
 	end

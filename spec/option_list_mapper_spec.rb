@@ -18,9 +18,11 @@ describe OptionListMapper do
 	end
 
 	it "maps singles and kvs correctly" do
-		opts = {user_password: 'test', master_password: 'testing', permissions: ['nomodify', 'nocopy'], random: 'random', text: 'text'}
+		opts = {user_password: 'test', master_password: 'testing', permissions: ['nomodify', 'nocopy'], random: 'text'}
 		kvs = [:user_password, :master_password, :permissions]
 		singles = [:random, :text]
 		OptionListMapper.create_options("", kvs,singles,opts).should eq("user_password=test master_password=testing permissions={nomodify nocopy} random text")
 	end
+
+
 end
