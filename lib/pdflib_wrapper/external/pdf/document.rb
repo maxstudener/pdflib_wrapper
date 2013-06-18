@@ -5,8 +5,10 @@ module PdflibWrapper
 				attr_accessor :document
 				def initialize(pdf, filepath, opts={})
 					#TODO: support opts
+					key_values = [:password]
+					singles = []
 					@pdf = pdf
-					@document = @pdf.open_pdi_document( filepath, "" )
+					@document = @pdf.open_pdi_document( filepath, OptionListMapper.create_options('', key_values, singles, opts) )
 				end
 
 				def close

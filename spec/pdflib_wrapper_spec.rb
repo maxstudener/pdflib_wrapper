@@ -81,4 +81,12 @@ describe PdflibWrapper do
   	page = test_pdf.open_pdf_page(1)
   	page.height.should be(height)
   end
+
+  it "opens password protected pdf" do
+    password_tempfile = Tempfile.new("external.pdf")
+    PdflibWrapper::Pdf.new(password_tempfile.path, {}, {with_blank_page: true, masterpassword: 'magic'}).save
+
+    pdf_handler = PdflibWrapper::Pdf.new('', {}, {dont_create_document: true})
+    pdf_handler.open_pdf(password_tempfile.path, {password: 'magic'})
+  end
 end
