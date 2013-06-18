@@ -18,6 +18,10 @@ describe PdflibWrapper do
   	File.exists?(filepath).should be_true
   end
 
+  it "just creates Pdflib handle" do
+    PdflibWrapper::Pdf.new('', {}, {dont_create_document: true})
+  end
+
   it "embeds pdf inside pdf" do
   	embed_tempfile = Tempfile.new("embed.pdf")
   	embed_pdf = PdflibWrapper::Pdf.new(embed_tempfile.path)

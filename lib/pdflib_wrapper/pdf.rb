@@ -10,23 +10,23 @@ module PdflibWrapper
 	  	@pdf.set_parameter("errorpolicy", opts[:errorpolicy] || "exception")
 
 	  	#TODO: better support for begin document options
-	  	begin_doc_opts = ""
-	  	begin_doc_opts << "masterpassword=#{opts[:master_password]} " if opts[:master_password]
-	  	begin_doc_opts << "permissions={#{opts[:permissions].join(' ')}} " if opts[:permissions] && opts[:permissions].is_a?(Array)
-	  	@pdf.begin_document(filepath.to_s, begin_doc_opts)
+	  	unless opts[:dont_create_document]
+		  	key_values = [:masterpassword, :userpassword, :permissions, :moddate]
+		  	@pdf.begin_document(filepath.to_s, OptionListMapper.create_options('', key_values, [], opts)) 
 
-			@pdf.set_info("Subject", metadata[:subject]) if metadata[:subject]
-			@pdf.set_info("Title", metadata[:title]) if metadata[:title]
-	    @pdf.set_info("Creator", metadata[:creator]) if metadata[:creator]
-	    @pdf.set_info("Author", metadata[:author]) if metadata[:author]
-	    @pdf.set_info("Keywords", metadata[:keywords].join(', ')) if metadata[:keywords] && metadata[:keywords].is_a?(Array)
-	    @pdf.set_info("Trapped", metadata[:trapped]) if opts[:trapped] && [true, false].include?(opts[:trapped])
+				@pdf.set_info("Subject", metadata[:subject]) if metadata[:subject]
+				@pdf.set_info("Title", metadata[:title]) if metadata[:title]
+		    @pdf.set_info("Creator", metadata[:creator]) if metadata[:creator]
+		    @pdf.set_info("Author", metadata[:author]) if metadata[:author]
+		    @pdf.set_info("Keywords", metadata[:keywords].join(', ')) if metadata[:keywords] && metadata[:keywords].is_a?(Array)
+		    @pdf.set_info("Trapped", metadata[:trapped]) if opts[:trapped] && [true, false].include?(opts[:trapped])
 
-	    #TODO: support more of the Global Options of pdflib
-	    @pdf.set_parameter("licensefile", opts[:license_path] ) if opts[:license_path]
-	    @pdf.set_value("compress", opts[:compress] ) if opts[:compress] && opts[:compress].is_a?(Fixnum)
+		    #TODO: support more of the Global Options of pdflib
+		    @pdf.set_parameter("licensefile", opts[:license_path] ) if opts[:license_path] #TODO: check if file exists
+		    @pdf.set_value("compress", opts[:compress] ) if opts[:compress] && opts[:compress].is_a?(Fixnum) #TODO: check range (1..9)
 
-	    @current_page = Page.new(@pdf, 1, 1).save if opts[:with_blank_page]
+		    @current_page = Page.new(@pdf, 1, 1).save if opts[:with_blank_page]
+		  end
 	  end
 
 	  def save
@@ -69,12 +69,12 @@ module PdflibWrapper
 
 	  def new_page(width, height, opts={})
 	  	#TODO: support opts
-	  	@current_page = Page.new(@pdf, width, height, opts.dup)
+	  	@current_page = Page.new(@pdf, width, height, opts)
 	  end
 
 	  def open_pdf(filepath, opts={})
 	  	#TODO: support opts
-	    @current_pdf = External::Pdf::Document.new(@pdf, filepath, opts.dup)
+	    @current_pdf = External::Pdf::Document.new(@pdf, filepath, opts)
 	  end
 
 	  def open_pdf_page(page_number=1, pdf=nil, opts={})

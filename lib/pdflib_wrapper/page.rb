@@ -15,12 +15,11 @@ module PdflibWrapper
 
 		class << self
 			def embed(pdf, page, x, y, opts)
-				#TODO: support more opts
-				opts_string = ""
-				opts_string << "dpi=#{opts[:dpi]} " if opts[:dpi]
-				opts_string << "boxsize={#{opts[:box_size][0]} #{opts[:box_size][1]}} " if opts[:box_size] && opts[:box_size].is_a?(Array)
-				opts_string << opts[:fit_options].join(' ') if opts[:fit_options] && opts[:fit_options].is_a?(Array)
-				pdf.fit_pdi_page(page.page, x, y, opts_string)
+		  	key_values = [:dpi, :boxsize, :rotate, :blind, :matchbox, :orientate, :position, :showborder]
+		  	#fitmethod => [:fitmethod, :meet], scale => [:scale => 3.0]
+		  	#fitmethod => 'fitmethod meet', scale => 'scale 3.0'
+		  	singles = [:fitmethod, :scale] 
+				pdf.fit_pdi_page(page.page, x, y, OptionListMapper.create_options('', key_values, [], opts))
 			end
 		end
 
