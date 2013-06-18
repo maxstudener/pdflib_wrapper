@@ -1,9 +1,10 @@
 module PdflibWrapper
 	class Pdf
-		attr_accessor :pdf
+		attr_accessor :pdf, :path
 	  def initialize(filepath, metadata={}, opts={})
 	  	#pdflib likes to override the file, should do a check to see if file already exists
 	  	#also pdflib like to make bad pdf if you dont close pdf after begin_document
+	  	@path = filepath
 	  	@pdf = PDFlib.new
 
 	  	#options legacy, return, exception
@@ -31,6 +32,7 @@ module PdflibWrapper
 
 	  def save
 	  	@pdf.end_document("")
+	  	self
 	  end
 	  alias_method :close, :save
 
@@ -85,6 +87,14 @@ module PdflibWrapper
 
 	  def embed_pdf_page(page, x, y, opts={})
 	  	Page.embed(@pdf, page, x, y, opts.dup)
+	  end
+
+	  class << self
+	  	def open_pdf(filepath, opts={})
+	  		pdf = new('',{},opts[:pdflib_opts] || {}).pdf
+	  		opts.delete(:pdflib_opts) if opts[:pdflib_opts]
+	  		External::Pdf::Document.new(pdf, filepath, opts)
+	  	end
 	  end
 	end
 end

@@ -20,24 +20,28 @@ describe PdflibWrapper do
 
   it "just creates Pdflib handle" do
     PdflibWrapper::Pdf.new('', {}, {dont_create_document: true})
+    #TODO: get document count and make sure its 0
+  end
+
+  it "store filepath" do
+    path = 'testing'
+    pdf = PdflibWrapper::Pdf.new(path, {}, {dont_create_document: true})
+    pdf.path.should be(path)
   end
 
   it "embeds pdf inside pdf" do
-  	embed_tempfile = Tempfile.new("embed.pdf")
-  	embed_pdf = PdflibWrapper::Pdf.new(embed_tempfile.path)
+  	embed_pdf = PdflibWrapper::Pdf.new(Tempfile.new("embed.pdf").path)
   	embed_pdf.new_page(2,4).save
   	embed_pdf.save
 
-  	new_tempfile = Tempfile.new("new.pdf")
-  	new_pdf = PdflibWrapper::Pdf.new(new_tempfile.path)
+  	new_pdf = PdflibWrapper::Pdf.new(Tempfile.new("new.pdf").path)
   	
-  	external_pdf = new_pdf.open_pdf(embed_tempfile.path)
+  	external_pdf = new_pdf.open_pdf(embed_pdf.path)
   	external_pdf_page_one = new_pdf.open_pdf_page
 
   	new_page = new_pdf.new_page(10,10)
 
-  	opts = {dpi: 288, box_size: [2,4], fit_options: ['fitmethod', 'meet']}
-  	new_pdf.embed_pdf_page(external_pdf_page_one, 0, 0, opts)
+  	new_pdf.embed_pdf_page(external_pdf_page_one, 0, 0)
 
   	new_page.save
   	external_pdf_page_one.close
@@ -47,8 +51,7 @@ describe PdflibWrapper do
   end
 
   it "creates font" do
-  	tempfile = Tempfile.new("generate_test.pdf")
-  	pdf = PdflibWrapper::Pdf.new(tempfile.path, {}, {with_blank_page: true})
+  	pdf = PdflibWrapper::Pdf.new(Tempfile.new("generate_test.pdf").path, {}, {with_blank_page: true})
   	font = pdf.create_font("Helvetica", "winansi")
   	font.should equal(pdf.pdf.load_font("Helvetica", "winansi", "" ))
   	pdf.close
@@ -56,37 +59,29 @@ describe PdflibWrapper do
 
   it "gets width of external pdf" do
   	width = 2.0
-  	external_tempfile = Tempfile.new("external.pdf")
-  	external_pdf = PdflibWrapper::Pdf.new(external_tempfile.path)
+  	external_pdf = PdflibWrapper::Pdf.new(Tempfile.new("external.pdf").path)
   	external_pdf.new_page(width,4).save
   	external_pdf.save
 
-
-  	test_pdf = PdflibWrapper::Pdf.new(Tempfile.new("test.pdf").path, {}, {with_blank_page: true})
-  	document = test_pdf.open_pdf(external_tempfile.path)
-  	page = test_pdf.open_pdf_page(1)
+  	test_pdf = PdflibWrapper::Pdf.open_pdf(external_pdf.path)
+  	page = test_pdf.open_page(1)
   	page.width.should be(width)
   end
 
   it "get height of external pdf" do
   	height = 4.0
-  	external_tempfile = Tempfile.new("external.pdf")
-  	external_pdf = PdflibWrapper::Pdf.new(external_tempfile.path)
+  	external_pdf = PdflibWrapper::Pdf.new(Tempfile.new("external.pdf").path)
   	external_pdf.new_page(2, height).save
   	external_pdf.save
 
-
-  	test_pdf = PdflibWrapper::Pdf.new(Tempfile.new("test.pdf").path, {}, {with_blank_page: true})
-  	document = test_pdf.open_pdf(external_tempfile.path)
-  	page = test_pdf.open_pdf_page(1)
+    test_pdf = PdflibWrapper::Pdf.open_pdf(external_pdf.path)
+    page = test_pdf.open_page(1)
   	page.height.should be(height)
   end
 
   it "opens password protected pdf" do
-    password_tempfile = Tempfile.new("external.pdf")
-    PdflibWrapper::Pdf.new(password_tempfile.path, {}, {with_blank_page: true, masterpassword: 'magic'}).save
+    password_pdf = PdflibWrapper::Pdf.new(Tempfile.new("external.pdf").path, {}, {with_blank_page: true, masterpassword: 'magic'}).save
 
-    pdf_handler = PdflibWrapper::Pdf.new('', {}, {dont_create_document: true})
-    pdf_handler.open_pdf(password_tempfile.path, {password: 'magic'})
+    PdflibWrapper::Pdf.open_pdf(password_pdf.path, {password: 'magic'})
   end
 end
