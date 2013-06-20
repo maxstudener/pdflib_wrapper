@@ -86,7 +86,7 @@ module PdflibWrapper
 	  end
 
 	  def embed_pdf_page(page, x, y, opts={})
-	  	Page.embed(@pdf, page, x, y, opts.dup)
+	  	Page.embed(@pdf, page, x, y, opts)
 	  end
 
 	  class << self

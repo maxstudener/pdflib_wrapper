@@ -15,10 +15,7 @@ module PdflibWrapper
 
 		class << self
 			def embed(pdf, page, x, y, opts)
-		  	key_values = [:dpi, :boxsize, :rotate, :blind, :matchbox, :orientate, :position, :showborder]
-		  	#fitmethod => [:fitmethod, :meet], scale => [:scale => 3.0]
-		  	#fitmethod => 'fitmethod meet', scale => 'scale 3.0'
-		  	singles = [:fitmethod, :scale] 
+		  	key_values = [:dpi, :boxsize, :rotate, :blind, :matchbox, :orientate, :position, :showborder, :fitmethod]
 				pdf.fit_pdi_page(page.page, x, y, OptionListMapper.create_options('', key_values, [], opts))
 			end
 		end
