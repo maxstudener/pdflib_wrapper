@@ -30,24 +30,48 @@ describe PdflibWrapper do
   end
 
   it "embeds pdf inside pdf" do
-  	embed_pdf = PdflibWrapper::Pdf.new(Tempfile.new("embed.pdf").path)
-  	embed_pdf.new_page(2,4).save
+  	embed_pdf = PdflibWrapper::Pdf.new(Tempfile.new('test.pdf').path)
+  	new_page = embed_pdf.new_page(100,100)
+    font = embed_pdf.create_font("Helvetica", "winansi")
+    embed_pdf.set_text_and_position(font, 4, 0, 40)
+    embed_pdf.print("THIS BETTER WORK OR ELSE THIS GEM IS GOING DOWN THE DRAIN")
+    new_page.save
   	embed_pdf.save
 
-  	new_pdf = PdflibWrapper::Pdf.new(Tempfile.new("new.pdf").path)
+    #new_pdf_temp = Tempfile.new("new.pdf")
+    tempfile_one = Tempfile.new('test1.pdf')
+  	new_pdf = PdflibWrapper::Pdf.new(tempfile_one.path)
   	
   	external_pdf = new_pdf.open_pdf(embed_pdf.path)
   	external_pdf_page_one = new_pdf.open_pdf_page
 
-  	new_page = new_pdf.new_page(10,10)
+  	new_page = new_pdf.new_page(200,200)
+  	new_pdf.embed_pdf_page(external_pdf_page_one, 0, 0, { dpi: 288, boxsize: [ 50, 50 ] , position: 'center', fitmethod: 'meet' })
 
-  	new_pdf.embed_pdf_page(external_pdf_page_one, 0, 0)
-
+    external_pdf_page_one.close
+    external_pdf.close
   	new_page.save
-  	external_pdf_page_one.close
-  	external_pdf.close
-
   	new_pdf.save
+
+    pdf = PDFlib.new
+    pdf.set_parameter("errorpolicy","exception")
+    tempfile_two = Tempfile.new('test2.pdf')
+    pdf.begin_document(tempfile_two.path, "")
+
+    external_pdf = pdf.open_pdi_document( embed_pdf.path, "" )
+    external_pdf_page_one = pdf.open_pdi_page( external_pdf, 1, "" )
+
+    page = pdf.begin_page_ext(200, 200, "")
+    pdf.fit_pdi_page(external_pdf_page_one, 0, 0, "dpi=288 boxsize={50 50} position=center fitmethod=meet")
+
+    pdf.close_pdi_page(external_pdf_page_one)
+    pdf.close_pdi_document(external_pdf)
+    pdf.end_page_ext("")
+    pdf.end_document("")
+
+
+
+    tempfile_one.size.should be(tempfile_two.size)
   end
 
   it "creates font" do
