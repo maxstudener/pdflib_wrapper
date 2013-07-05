@@ -1,6 +1,3 @@
-require 'os'
-require 'PDFlib.bundle' if OS.mac?
-require 'PDFlib.so' if OS.linux?
 require "PDFlib"
 
 require "option_list_mapper"
