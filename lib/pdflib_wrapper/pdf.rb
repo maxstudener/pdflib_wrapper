@@ -13,6 +13,7 @@ module PdflibWrapper
 	  	#TODO: better support for begin document options
 	  	unless opts[:dont_create_document]
 		  	key_values = [:masterpassword, :userpassword, :permissions, :moddate]
+		  	@pdf.set_parameter("licensefile", opts[:license_path] ) if opts[:license_path] #TODO: check if file exists
 		  	@pdf.begin_document(filepath.to_s, OptionListMapper.create_options('', key_values, [], opts)) 
 
 				@pdf.set_info("Subject", metadata[:subject]) if metadata[:subject]
@@ -23,7 +24,7 @@ module PdflibWrapper
 		    @pdf.set_info("Trapped", metadata[:trapped]) if opts[:trapped] && [true, false].include?(opts[:trapped])
 
 		    #TODO: support more of the Global Options of pdflib
-		    @pdf.set_parameter("licensefile", opts[:license_path] ) if opts[:license_path] #TODO: check if file exists
+		    
 		    @pdf.set_value("compress", opts[:compress] ) if opts[:compress] && opts[:compress].is_a?(Fixnum) #TODO: check range (1..9)
 
 		    @current_page = Page.new(@pdf, 1, 1).save if opts[:with_blank_page]
