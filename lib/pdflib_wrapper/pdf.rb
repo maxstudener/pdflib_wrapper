@@ -9,11 +9,12 @@ module PdflibWrapper
 
 	  	#options legacy, return, exception
 	  	@pdf.set_parameter("errorpolicy", opts[:errorpolicy] || "exception")
+	  	@pdf.set_parameter("licensefile", opts[:license_path] ) if opts[:license_path] #TODO: check if file exists
 
 	  	#TODO: better support for begin document options
 	  	unless opts[:dont_create_document]
 		  	key_values = [:masterpassword, :userpassword, :permissions, :moddate]
-		  	@pdf.set_parameter("licensefile", opts[:license_path] ) if opts[:license_path] #TODO: check if file exists
+
 		  	@pdf.begin_document(filepath.to_s, OptionListMapper.create_options('', key_values, [], opts)) 
 
 				@pdf.set_info("Subject", metadata[:subject]) if metadata[:subject]
