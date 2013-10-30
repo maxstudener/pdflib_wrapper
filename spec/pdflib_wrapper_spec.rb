@@ -62,7 +62,7 @@ describe PdflibWrapper do
     external_pdf = pdf.open_pdi_document( embed_pdf.path, "" )
     external_pdf_page_one = pdf.open_pdi_page( external_pdf, 1, "" )
 
-    page = pdf.begin_page_ext(200, 200, "")
+    pdf.begin_page_ext(200, 200, "")
     pdf.fit_pdi_page(external_pdf_page_one, 0, 0, "dpi=288 boxsize={50 50} position=center fitmethod=meet")
 
     pdf.close_pdi_page(external_pdf_page_one)
@@ -71,6 +71,39 @@ describe PdflibWrapper do
     pdf.end_document("")
 
 
+
+    tempfile_one.size.should be(tempfile_two.size)
+  end
+
+  it "embeds image inside pdf" do
+    
+    test_image_path = File.join(File.expand_path(File.dirname(__FILE__)), 'images', 'test.gif')
+
+    tempfile_one = Tempfile.new("new1.pdf")
+    pdf = PdflibWrapper::Pdf.new(tempfile_one.path)
+    new_page = pdf.new_page(500,600)
+
+    embed_image = PdflibWrapper::External::Image::Document.new(pdf.pdf, test_image_path)
+    
+    pdf.embed_image(embed_image, 0, 0, { dpi: 288, boxsize: [ 407, 580 ], position: 'center', fitmethod: 'meet' })
+
+    new_page.save
+    pdf.save
+
+
+    tempfile_two = Tempfile.new('new2.pdf')
+    pdf = PDFlib.new
+    pdf.set_parameter("errorpolicy","exception")
+    pdf.begin_document(tempfile_two.path, "")
+    pdf.begin_page_ext(500, 600, "")
+
+    external_image = pdf.load_image( "auto", test_image_path, "" )
+
+    pdf.fit_image(external_image, 0, 0, "dpi=288 boxsize={407 580} position=center fitmethod=meet")
+
+    pdf.close_image(external_image)
+    pdf.end_page_ext("")
+    pdf.end_document("")
 
     tempfile_one.size.should be(tempfile_two.size)
   end

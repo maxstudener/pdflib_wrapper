@@ -18,6 +18,10 @@ module PdflibWrapper
 		  	key_values = [:dpi, :boxsize, :rotate, :blind, :matchbox, :orientate, :position, :showborder, :fitmethod]
 				pdf.fit_pdi_page(page.page, x, y, OptionListMapper.create_options('', key_values, [], opts))
 			end
+			def embed_image(pdf, image, x, y, opts)
+		  	key_values = [:dpi, :boxsize, :rotate, :blind, :matchbox, :orientate, :position, :showborder, :fitmethod]
+				pdf.fit_image(image.document, x, y, OptionListMapper.create_options('', key_values, [], opts))
+			end
 		end
 
 	end

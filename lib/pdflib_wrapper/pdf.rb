@@ -91,6 +91,10 @@ module PdflibWrapper
 	  	Page.embed(@pdf, page, x, y, opts)
 	  end
 
+	  def embed_image(image, x,y, opts={})
+	  	Page.embed_image(@pdf, image, x,y, opts={})
+	  end
+
 	  class << self
 	  	def open_pdf(filepath, opts={})
 	  		pdf = new('',{},opts[:pdflib_opts] || {}).pdf
