@@ -71,6 +71,22 @@ external_pdf_page_one.close
 external_pdf.close
 ```
 
+Embed Image inside PDF
+```ruby
+test_image_path = '/path/to/image/yay.gif'
+
+tempfile_one = Tempfile.new("new1.pdf")
+pdf = PdflibWrapper::Pdf.new(tempfile_one.path)
+new_page = pdf.new_page(500,600)
+
+embed_image = PdflibWrapper::External::Image::Document.new(pdf.pdf, test_image_path)
+
+pdf.embed_image(embed_image, 0, 0, { dpi: 288, boxsize: [ 407, 580 ], position: 'center', fitmethod: 'meet' })
+
+new_page.save
+pdf.save
+```
+
 ## Contributing
 
 1. Fork it
