@@ -92,7 +92,7 @@ module PdflibWrapper
 	  end
 
 	  def embed_image(image, x,y, opts={})
-	  	Page.embed_image(@pdf, image, x,y, opts={})
+	  	Page.embed_image(@pdf, image, x,y, opts)
 	  end
 
 	  class << self
